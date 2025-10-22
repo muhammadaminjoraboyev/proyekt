@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mehmonxona</title>
+  <style>
+    /* Orqa fon rasmi va umumi fon sozlamalari */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 0;
+      background: url('https://i.dugun.com/gallery/108189/preview_euro-park_cwNBolZF.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Shaffof fon konteyner */
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      max-width: 1000px;
+      margin: 30px auto 50px auto;
+      padding: 25px 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0 10px 0;
+      text-shadow: 0 0 10px rgba(0,0,0,0.9);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #212427;
+      padding-bottom: 5px;
+    }
+
+    /* Xonalar ro'yxati grid ko'rinishida */
+    .room-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .room {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .room:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.9);
+    }
+
+    .room img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .room-content {
+      padding: 15px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .room-content h3 {
+      margin: 0 0 10px 0;
+      color: #cce5ff;
+    }
+
+    .room-content p {
+      margin: 5px 0;
+      color: #e0e0e0;
+      flex-grow: 1;
+    }
+
+    .price-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #4a90e2;
+    }
+
+    .status {
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 12px;
+      color: white;
+    }
+
+    .available {
+      background-color: #28a745;
+    }
+    .unavailable {
+      background-color: #dc3545;
+    }
+
+    /* Formani dizayni */
+    form {
+      margin-top: 40px;
+      background-color: rgba(74, 144, 226, 0.2);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+      color: white;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    form input[type="date"] {
+      background-color: white;
+      color: black;
+    }
+
+    form select {
+      background-color: white;
+      color: black;
+    }
+
+    form button {
+      background-color: #4a90e2;
+      border: none;
+      color: white;
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      font-weight: 700;
+    }
+    form button:hover {
+      background-color: #357ABD;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #28a745;
+      text-shadow: 0 0 5px black;
+    }
+
+    /* Responsive kichik ekranlar uchun */
+    @media(max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .container {
+        padding: 15px 20px;
+        margin: 20px 10px 40px 10px;
+      }
+      form button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Muhammadamin hotel xush kelibsiz!</h1>
+  </header>
+
+  <div class="container">
+    <h2>Xonalar ro‘yxati</h2>
+    <div class="room-list" id="room-list">
+      <!-- Xonalar JavaScript orqali joylashtiriladi -->
+    </div>
+
+    <h2>Bron qilish formasi</h2>
+    <form id="booking-form">
+      <label for="name">Ismingiz</label>
+      <input type="text" id="name" name="name" required placeholder="Ismingizni kiriting" />
+
+      <label for="phone">Telefon raqamingiz</label>
+      <input type="tel" id="phone" name="phone" required pattern="[0-9]{9,12}" placeholder="99xxxxxxx" />
+
+      <label for="room">Xona tanlang</label>
+      <select id="room" name="room" required>
+        <option value="">-- Tanlang --</option>
+      </select>
+
+      <label for="date">Kelish sanasi</label>
+      <input type="date" id="date" name="date" required />
+
+      <button type="submit">Bron qilish</button>
+    </form>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    // Xonalar ma'lumotlari rasmlar bilan
+    const rooms = [
+      {
+        id: 1,
+        name: "Ekanom class",
+        description: "Quvvatli, toza xona, kichik lekin qulay.",
+        price: 500000,
+        is_available: true,
+        img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/b0/60/65/room-interior.jpg?w=900&h=500&s=1"
+      },
+      {
+        id: 2,
+        name: "Bissnes room",
+        description: "Katta xona ikkita o‘rin uchun, zamonaviy dizayn.",
+        price: 1200000,
+        is_available: false,
+        img: "data:image/jpeg;base64,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"
+      },
+      {
+        id: 3,
+        name: "Lyuks xona",
+        description: "Qulay va zamonaviy lyuks xona katta deraza bilan.",
+        price: 2000000,
+        is_available: true,
+        img: "https://images.travelandleisureasia.com/wp-content/uploads/sites/2/2021/04/13141208/5r4t-17.jpg"
+      }
+    ];
+
+    const roomList = document.getElementById('room-list');
+    const roomSelect = document.getElementById('room');
+
+    function loadRooms() {
+      rooms.forEach(room => {
+        // Xonalar kartasini yaratish
+        const roomDiv = document.createElement('div');
+        roomDiv.className = 'room';
+
+        roomDiv.innerHTML = `
+          <img src="${room.img}" alt="${room.name}" />
+          <div class="room-content">
+            <h3>${room.name}</h3>
+            <p>${room.description}</p>
+            <div class="price-status">
+              <span class="price">${room.price.toLocaleString()} so'm</span>
+              <span class="status ${room.is_available ? 'available' : 'unavailable'}">
+                ${room.is_available ? 'Bo‘sh' : 'Band'}
+              </span>
+            </div>
+          </div>
+        `;
+        roomList.appendChild(roomDiv);
+
+        // Select uchun faqat bo‘sh xonalarni qo‘shamiz
+        if(room.is_available) {
+          const option = document.createElement('option');
+          option.value = room.id;
+          option.textContent = `${room.name} - ${room.price.toLocaleString()} so'm`;
+          roomSelect.appendChild(option);
+        }
+      });
+    }
+
+    loadRooms();
+
+    const bookingForm = document.getElementById('booking-form');
+    const messageDiv = document.getElementById('message');
+
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = bookingForm.name.value.trim();
+      const phone = bookingForm.phone.value.trim();
+      const roomId = bookingForm.room.value;
+      const date = bookingForm.date.value;
+
+      if(!roomId) {
+        alert("Iltimos, xona tanlang.");
+        return;
+      }
+
+      if(name === "" || phone === "" || date === "") {
+        alert("Iltimos, barcha maydonlarni to'ldiring.");
+        return;
+      }
+
+      const room = rooms.find(r => r.id == roomId);
+
+      messageDiv.style.color = '#28a745';
+      messageDiv.textContent = `Rahmat, ${name}! Siz ${room.name} xonasini ${date} sanasiga bron qildingiz. Biz siz bilan tez orada bog‘lanamiz.`;
+
+      bookingForm.reset();
+    });
+  </script>
+</body>
+</html>
